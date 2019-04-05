@@ -1,9 +1,22 @@
 # OCaml Serializer Benchmarks
 
-In order to get a rough idea of the cost of serialization and de-serialization in various formats implemented in OCaml, I created
-this quick benchmark.
+In order to get a rough idea of the cost of serialization and de-serialization in various formats implemented in OCaml, I created this quick benchmark.
 
-The example results below ran on my Intel® Core™ i7-8650U CPU @ 1.90GHz laptop:
+## Formats
+
+* Google Protocol Buffers with `ocaml-protoc`
+* Type-safe JSON with `ocaml-protoc-yojson`
+* Type-safe JSON with `atd` in front of `yojson`
+* Raw JSON directly with `yojson`
+
+## TODO
+
+- [ ] Jane Street's `Bin_prot` could be better for OCaml-to-OCaml exchanges
+- [ ] S-expressions worth a look?
+
+## Results
+
+These ran on my Intel® Core™ i7-8650U CPU @ 1.90GHz:
 
 ```text
 ┌────────────────────────────┬────────────┬───────────┬──────────┬──────────┬────────────┐
@@ -24,9 +37,9 @@ The example results below ran on my Intel® Core™ i7-8650U CPU @ 1.90GHz lapto
 
 For this very simple test, it appears that `ocaml-protoc`'s binary codec outperforms the JSON variants by quite a bit: 4.5x `ocaml-protoc-yojson` and 3x `atd-yojson`.
 
-### Apache Thrift
+### Note About Apache Thrift
 
-My quick hack `thrift_buffer_transport.ml` is still included, in case anyone with OCaml 4.06 or lower wants to try it out.  On my laptop, it was roughly 15x slower than `ocaml-protoc` binary, so I lost interest.  (This was also consistent with Protobuf vs Thrift in Perl and JavaScript.)
+My quick hack `thrift_buffer_transport.ml` is still included, in case anyone with OCaml 4.06 or lower wants to try it out.  On my laptop, it was roughly 15x slower than `ocaml-protoc` binary, so I lost interest.  (This was also consistent with Protobuf vs Thrift in Perl and JavaScript tests.)
 
 ## MIT License
 

@@ -28,4 +28,8 @@ build:	benchmarks.exe
 benchmarks.exe:	$(wildcard src/*.ml src/*.mli)
 	@cd src ; ocamlfind ocamlopt $(DEPS) benchmarks.ml -o ../benchmarks.exe -thread -linkpkg -package $(LIBS)
 
-.PHONY:	help clean build build-codecs
+# Undocumented: this was used when I needed Thrift
+ocaml405:
+	@docker run --name ocaml405 -it -v `pwd`:/work ocaml/opam:debian-9_ocaml-4.05.0_flambda bash
+
+.PHONY:	help clean build build-codecs ocaml405
