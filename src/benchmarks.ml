@@ -48,10 +48,8 @@ let yojson_data =
       ])
 ;;
 
-(* TODO: remove ignore(), I think they're unnecessary? *)
-
 let yojson_raw () =
-  yojson_data |> Yojson.Basic.to_string |> Yojson.Basic.from_string |> ignore
+  yojson_data |> Yojson.Basic.to_string |> Yojson.Basic.from_string
 ;;
 
 let atd_data =
@@ -87,20 +85,13 @@ let atd_data =
 ;;
 
 let atd_json = Atd_payload_j.string_of_atd_payload atd_data
-
-let atd_yojson_read () =
-  atd_json |> Atd_payload_j.atd_payload_of_string |> ignore
-;;
-
-let atd_yojson_write () =
-  atd_data |> Atd_payload_j.string_of_atd_payload |> ignore
-;;
+let atd_yojson_read () = atd_json |> Atd_payload_j.atd_payload_of_string
+let atd_yojson_write () = atd_data |> Atd_payload_j.string_of_atd_payload
 
 let atd_yojson_rw () =
   atd_data
   |> Atd_payload_j.string_of_atd_payload
   |> Atd_payload_j.atd_payload_of_string
-  |> ignore
 ;;
 
 let protobuf_data =
@@ -139,16 +130,13 @@ let protobuf_bin_read () =
   protobuf_bin
   |> Pbrt.Decoder.of_bytes
   |> Protobuf_payload_pb.decode_protobuf_payload
-  |> ignore
 ;;
 
 let protobuf_bin_rw () =
   let my_encoder = Pbrt.Encoder.create () in
   Protobuf_payload_pb.encode_protobuf_payload protobuf_data my_encoder;
   let my_binary = Pbrt.Encoder.to_bytes my_encoder in
-  ignore
-    (Protobuf_payload_pb.decode_protobuf_payload
-       (Pbrt.Decoder.of_bytes my_binary))
+  Protobuf_payload_pb.decode_protobuf_payload (Pbrt.Decoder.of_bytes my_binary)
 ;;
 
 let protobuf_json =
@@ -160,14 +148,12 @@ let protobuf_json_read () =
   protobuf_json
   |> Yojson.Basic.from_string
   |> Protobuf_payload_yojson.decode_protobuf_payload
-  |> ignore
 ;;
 
 let protobuf_json_write () =
   protobuf_data
   |> Protobuf_payload_yojson.encode_protobuf_payload
   |> Yojson.Basic.to_string
-  |> ignore
 ;;
 
 let protobuf_json_rw () =
@@ -176,16 +162,99 @@ let protobuf_json_rw () =
   |> Yojson.Basic.to_string
   |> Yojson.Basic.from_string
   |> Protobuf_payload_yojson.decode_protobuf_payload
-  |> ignore
+;;
+
+module Binprot_tests = struct
+  type binprot_payload_fifth =
+    { first : string option
+    ; second : string option
+    ; third : string option
+    ; fourth : string option
+    }
+  [@@deriving bin_io]
+
+  type binprot_payload =
+    { first : bool
+    ; second : bool
+    ; third : float
+    ; fourth : int
+    ; fifth : binprot_payload_fifth list
+    ; sixth : int list
+    }
+  [@@deriving bin_io]
+end
+
+let binprot_data =
+  Binprot_tests.
+    { first = false
+    ; second = true
+    ; third = 12345678.117
+    ; fourth = 234567
+    ; fifth =
+        [ { first = Some "premier"
+          ; second = Some "deuxieme"
+          ; third = Some ""
+          ; fourth = Some ""
+          }
+        ; { first = Some ""
+          ; second = Some ""
+          ; third = Some "troisieme"
+          ; fourth = Some "quatrieme"
+          }
+        ; { first = Some "premier"
+          ; second = Some "deuxieme"
+          ; third = Some ""
+          ; fourth = Some ""
+          }
+        ; { first = Some ""
+          ; second = Some ""
+          ; third = Some "troisieme"
+          ; fourth = Some "quatrieme"
+          }
+        ]
+    ; sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ]
+    }
+;;
+
+let binprot_binbuf =
+  let buf = Bin_prot.Common.create_buf 1024 in
+  let writer = Binprot_tests.bin_write_binprot_payload buf in
+  let _ = writer ~pos:0 binprot_data in
+  buf
+;;
+
+let binprot_rw () =
+  let buf = Bin_prot.Common.create_buf 1024 in
+  let writer = Binprot_tests.bin_write_binprot_payload buf in
+  let _ = writer ~pos:0 binprot_data in
+  let reader = Binprot_tests.bin_read_binprot_payload buf in
+  let pos = ref 0 in
+  reader pos
+;;
+
+let binprot_write () =
+  let buf = Bin_prot.Common.create_buf 1024 in
+  let writer = Binprot_tests.bin_write_binprot_payload buf in
+  writer ~pos:0 binprot_data
+;;
+
+let binprot_read () =
+  let reader = Binprot_tests.bin_read_binprot_payload binprot_binbuf in
+  let pos = ref 0 in
+  reader pos
 ;;
 
 let main () =
   Command.run
     (Bench.make_command
-       [ Bench.Test.create ~name:"protobuf-bin: read-write" protobuf_bin_rw
+       [ (* spacer *)
+         Bench.Test.create ~name:"binprot: read-write" binprot_rw
+       ; Bench.Test.create ~name:"protobuf-bin: read-write" protobuf_bin_rw
        ; Bench.Test.create ~name:"protobuf-json: read-write" protobuf_json_rw
        ; Bench.Test.create ~name:"atd-yojson: read-write" atd_yojson_rw
        ; Bench.Test.create ~name:"yojson: read-write PARTIAL" yojson_raw
+       ; Bench.Test.create ~name:"binprot: read" binprot_read
+       ; Bench.Test.create ~name:"binprot: write" binprot_write
        ; Bench.Test.create ~name:"protobuf-bin: read" protobuf_bin_read
        ; Bench.Test.create ~name:"protobuf-bin: write" protobuf_bin_write
        ; Bench.Test.create ~name:"protobuf-json: read" protobuf_json_read
