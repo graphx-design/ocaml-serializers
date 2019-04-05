@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package protobuf_payloads;
+
+message ProtobufPayloadFifth {
+	string first = 1;
+	string second = 2;
+	string third = 3;
+	string fourth = 4;
+}
+
+message ProtobufPayload {
+	bool first = 1;
+	bool second = 2;
+	double third = 3;
+	int32 fourth = 4 [(ocaml_type) = int_t];
+	repeated ProtobufPayloadFifth fifth = 5;
+	repeated int32 sixth = 6 [(ocaml_type) = int_t];
+}

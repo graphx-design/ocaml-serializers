@@ -1,0 +1,16 @@
+type atd_payload_fifth = {
+	?first: string option;
+	?second: string option;
+	?third: string option;
+	?fourth: string option;
+}
+
+type atd_payload = {
+   first: bool;
+   second: bool;
+   third: float;
+   fourth: int;
+   fifth: atd_payload_fifth list;
+   sixth: int list;
+}
+

@@ -7,6 +7,10 @@
 *.cmx
 *.cmxs
 *.cmxa
+*.exe
+
+src/atd_*.ml*
+src/protobuf_*.ml*
 
 # ocamlbuild working directory
 _build/
