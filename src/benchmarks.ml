@@ -182,6 +182,12 @@ module Binprot_tests = struct
     ; sixth : int list
     }
   [@@deriving bin_io]
+
+  let shapedigest =
+    bin_shape_binprot_payload |> Bin_prot.Shape.eval_to_digest_string
+  ;;
+
+  let fakedigest = "f13160093f976a7cb3c92909c3053b28"
 end
 
 let binprot_data =
@@ -224,12 +230,15 @@ let binprot_binbuf =
 ;;
 
 let binprot_rw () =
-  let buf = Bin_prot.Common.create_buf 1024 in
-  let writer = Binprot_tests.bin_write_binprot_payload buf in
-  let _ = writer ~pos:0 binprot_data in
-  let reader = Binprot_tests.bin_read_binprot_payload buf in
-  let pos = ref 0 in
-  reader pos
+  if Binprot_tests.(String.compare shapedigest fakedigest) = 0
+  then (
+    let buf = Bin_prot.Common.create_buf 1024 in
+    let writer = Binprot_tests.bin_write_binprot_payload buf in
+    let _ = writer ~pos:0 binprot_data in
+    let reader = Binprot_tests.bin_read_binprot_payload buf in
+    let pos = ref 0 in
+    reader pos |> ignore)
+  else ()
 ;;
 
 let binprot_write () =
@@ -239,9 +248,12 @@ let binprot_write () =
 ;;
 
 let binprot_read () =
-  let reader = Binprot_tests.bin_read_binprot_payload binprot_binbuf in
-  let pos = ref 0 in
-  reader pos
+  if Binprot_tests.(String.compare shapedigest fakedigest) = 0
+  then (
+    let reader = Binprot_tests.bin_read_binprot_payload binprot_binbuf in
+    let pos = ref 0 in
+    reader pos |> ignore)
+  else ()
 ;;
 
 let main () =

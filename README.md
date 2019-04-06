@@ -10,11 +10,6 @@ In order to get a rough idea of the cost of serialization and de-serialization i
 * Raw JSON directly with `yojson`
 * Jane Street's `Bin_prot`
 
-## TODO
-
-- [ ] Jane Street's `Bin_prot` outperforms unfairly: we need to add shape validation
-- [ ] S-expressions worth a look?
-
 ## Results
 
 These ran on my Intel® Core™ i7-8650U CPU @ 1.90GHz:
@@ -23,23 +18,23 @@ These ran on my Intel® Core™ i7-8650U CPU @ 1.90GHz:
 ┌────────────────────────────┬────────────┬───────────┬──────────┬──────────┬────────────┐
 │ Name                       │   Time/Run │   mWd/Run │ mjWd/Run │ Prom/Run │ Percentage │
 ├────────────────────────────┼────────────┼───────────┼──────────┼──────────┼────────────┤
-│ binprot: read-write        │   891.51ns │   213.01w │          │          │     10.14% │
-│ protobuf-bin: read-write   │ 1_920.27ns │ 1_504.04w │    0.60w │    0.60w │     21.84% │
-│ protobuf-json: read-write  │ 8_791.32ns │ 1_322.08w │    1.17w │    1.17w │    100.00% │
-│ atd-yojson: read-write     │ 5_615.56ns │ 1_000.02w │    0.47w │    0.47w │     63.88% │
-│ yojson: read-write PARTIAL │ 7_647.18ns │   912.02w │    0.73w │    0.73w │     86.99% │
-│ binprot: read              │   444.89ns │   186.00w │          │          │      5.06% │
-│ binprot: write             │   408.83ns │    27.00w │          │          │      4.65% │
-│ protobuf-bin: read         │   912.42ns │   830.02w │    0.37w │    0.37w │     10.38% │
-│ protobuf-bin: write        │   915.58ns │   674.01w │    0.17w │    0.17w │     10.41% │
-│ protobuf-json: read        │ 4_881.78ns │   709.02w │    0.75w │    0.75w │     55.53% │
-│ protobuf-json: write       │ 3_832.54ns │   613.05w │    0.53w │    0.53w │     43.59% │
-│ atd-yojson: read           │ 3_582.47ns │   734.00w │    0.37w │    0.37w │     40.75% │
-│ atd-yojson: write          │ 1_906.43ns │   266.01w │          │          │     21.69% │
+│ binprot: read-write        │   893.32ns │   213.01w │          │          │     10.18% │
+│ protobuf-bin: read-write   │ 1_915.41ns │ 1_504.04w │    0.60w │    0.60w │     21.84% │
+│ protobuf-json: read-write  │ 8_771.25ns │ 1_322.08w │    1.17w │    1.17w │    100.00% │
+│ atd-yojson: read-write     │ 5_572.01ns │ 1_000.02w │    0.47w │    0.47w │     63.53% │
+│ yojson: read-write PARTIAL │ 7_603.26ns │   912.02w │    0.73w │    0.73w │     86.68% │
+│ binprot: read              │   447.14ns │   186.00w │          │          │      5.10% │
+│ binprot: write             │   401.09ns │    27.00w │          │          │      4.57% │
+│ protobuf-bin: read         │   901.71ns │   830.02w │    0.36w │    0.36w │     10.28% │
+│ protobuf-bin: write        │   915.03ns │   674.01w │    0.17w │    0.17w │     10.43% │
+│ protobuf-json: read        │ 4_891.48ns │   709.02w │    0.75w │    0.75w │     55.77% │
+│ protobuf-json: write       │ 3_801.11ns │   613.05w │    0.53w │    0.53w │     43.34% │
+│ atd-yojson: read           │ 3_596.35ns │   734.00w │    0.37w │    0.37w │     41.00% │
+│ atd-yojson: write          │ 1_895.98ns │   266.01w │          │          │     21.62% │
 └────────────────────────────┴────────────┴───────────┴──────────┴──────────┴────────────┘
 ```
 
-For this very simple test, it appears that `ocaml-protoc`'s binary codec outperforms the JSON variants by quite a bit: 4.5x `ocaml-protoc-yojson` and 3x `atd-yojson`.  For OCaml-only, Jane Street's `Bin_prot` outperforms even binary Protobuf by an impressive 2x, without shape validation.
+For this very simple test, it appears that `ocaml-protoc`'s binary codec outperforms the JSON variants by quite a bit: 4.5x `ocaml-protoc-yojson` and 3x `atd-yojson`.  For OCaml-only, Jane Street's `Bin_prot` outperforms even binary Protobuf by an impressive 2x.
 
 ### Note About Apache Thrift
 
