@@ -230,15 +230,15 @@ let binprot_binbuf =
 ;;
 
 let binprot_rw () =
-  if Binprot_tests.(String.compare shapedigest fakedigest) = 0
-  then (
+  match Binprot_tests.(String.compare shapedigest fakedigest) = 0 with
+  | false -> ()
+  | true ->
     let buf = Bin_prot.Common.create_buf 1024 in
     let writer = Binprot_tests.bin_write_binprot_payload buf in
     let _ = writer ~pos:0 binprot_data in
     let reader = Binprot_tests.bin_read_binprot_payload buf in
     let pos = ref 0 in
-    reader pos |> ignore)
-  else ()
+    reader pos |> ignore
 ;;
 
 let binprot_write () =
@@ -248,12 +248,12 @@ let binprot_write () =
 ;;
 
 let binprot_read () =
-  if Binprot_tests.(String.compare shapedigest fakedigest) = 0
-  then (
+  match Binprot_tests.(String.compare shapedigest fakedigest) = 0 with
+  | false -> ()
+  | true ->
     let reader = Binprot_tests.bin_read_binprot_payload binprot_binbuf in
     let pos = ref 0 in
-    reader pos |> ignore)
-  else ()
+    reader pos |> ignore
 ;;
 
 let main () =
