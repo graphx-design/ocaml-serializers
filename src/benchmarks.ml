@@ -1,6 +1,11 @@
 open Core
 open Core_bench.Std
 
+(* Generic data *)
+
+let string_a = String.make 1000 'A'
+let string_b = String.make 500 'B'
+
 (* Raw Yojson *)
 
 let yojson_data =
@@ -13,7 +18,7 @@ let yojson_data =
       ; ( "fifth"
         , `List
             [ `Assoc
-                [ "first", `String "premier"
+                [ "first", `String string_a
                 ; "second", `String "deuxieme"
                 ; "third", `String ""
                 ; "fourth", `String ""
@@ -21,7 +26,7 @@ let yojson_data =
             ; `Assoc
                 [ "first", `String ""
                 ; "second", `String ""
-                ; "third", `String "troisieme"
+                ; "third", `String string_b
                 ; "fourth", `String "quatrieme"
                 ]
             ; `Assoc
@@ -63,14 +68,14 @@ let atd_data =
     ; third = 12345678.117
     ; fourth = 234567
     ; fifth =
-        [ { first = Some "premier"
+        [ { first = Some string_a
           ; second = Some "deuxieme"
           ; third = None
           ; fourth = None
           }
         ; { first = None
           ; second = None
-          ; third = Some "troisieme"
+          ; third = Some string_b
           ; fourth = Some "quatrieme"
           }
         ; { first = Some "premier"
@@ -107,10 +112,10 @@ let protobuf_data =
     ; third = 12345678.117
     ; fourth = 234567
     ; fifth =
-        [ { first = "premier"; second = "deuxieme"; third = ""; fourth = "" }
+        [ { first = string_a; second = "deuxieme"; third = ""; fourth = "" }
         ; { first = ""
           ; second = ""
-          ; third = "troisieme"
+          ; third = string_b
           ; fourth = "quatrieme"
           }
         ; { first = "premier"; second = "deuxieme"; third = ""; fourth = "" }
@@ -205,14 +210,14 @@ let binprot_data =
     ; third = 12345678.117
     ; fourth = 234567
     ; fifth =
-        [ { first = Some "premier"
+        [ { first = Some string_a
           ; second = Some "deuxieme"
           ; third = Some ""
           ; fourth = Some ""
           }
         ; { first = Some ""
           ; second = Some ""
-          ; third = Some "troisieme"
+          ; third = Some string_b
           ; fourth = Some "quatrieme"
           }
         ; { first = Some "premier"
@@ -231,7 +236,7 @@ let binprot_data =
 ;;
 
 let binprot_binbuf =
-  let buf = Bin_prot.Common.create_buf 1024 in
+  let buf = Bin_prot.Common.create_buf 2048 in
   let writer = Binprot_tests.bin_write_binprot_payload buf in
   let _ = writer ~pos:0 binprot_data in
   buf
@@ -241,7 +246,7 @@ let binprot_rw () =
   match Binprot_tests.(String.compare shapedigest fakedigest) = 0 with
   | false -> ()
   | true ->
-    let buf = Bin_prot.Common.create_buf 1024 in
+    let buf = Bin_prot.Common.create_buf 2048 in
     let writer = Binprot_tests.bin_write_binprot_payload buf in
     let _ = writer ~pos:0 binprot_data in
     let reader = Binprot_tests.bin_read_binprot_payload buf in
@@ -250,7 +255,7 @@ let binprot_rw () =
 ;;
 
 let binprot_write () =
-  let buf = Bin_prot.Common.create_buf 1024 in
+  let buf = Bin_prot.Common.create_buf 2048 in
   let writer = Binprot_tests.bin_write_binprot_payload buf in
   writer ~pos:0 binprot_data
 ;;
@@ -293,14 +298,14 @@ let dyo_data =
     ; third = 12345678.117
     ; fourth = 234567
     ; fifth =
-        [ { first = Some "premier"
+        [ { first = Some string_a
           ; second = Some "deuxieme"
           ; third = Some ""
           ; fourth = Some ""
           }
         ; { first = Some ""
           ; second = Some ""
-          ; third = Some "troisieme"
+          ; third = Some string_b
           ; fourth = Some "quatrieme"
           }
         ; { first = Some "premier"
@@ -367,14 +372,14 @@ let dpb_data =
     ; third = 12345678.117
     ; fourth = 234567
     ; fifth =
-        [ { first = Some "premier"
+        [ { first = Some string_a
           ; second = Some "deuxieme"
           ; third = Some ""
           ; fourth = Some ""
           }
         ; { first = Some ""
           ; second = Some ""
-          ; third = Some "troisieme"
+          ; third = Some string_b
           ; fourth = Some "quatrieme"
           }
         ; { first = Some "premier"
