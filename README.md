@@ -10,7 +10,7 @@ In order to get a rough idea of the cost of serialization and de-serialization i
 
 ### Google Protocol Buffers
 
-* [Cross-platform] `ocaml-protoc`, from a Protobuf IDL
+* [Cross-platform] `ocaml-protoc`, from a Protobuf IDL (front-end to `ppx_deriving_protobuf`)
 * [OCaml-centric] `ppx_deriving_protobuf`, from type definitions (can _generate_ a Protobuf IDL)
 
 ### JSON
@@ -58,7 +58,7 @@ From this very simple test, we can derive a few tentative conclusions:
 
 * Jane Street's `Bin_prot` (a.k.a. `bin-io`) is 3x as fast as binary Protobuf (keep in mind some of it is coded in C);
 
-* For binary Protobuf, `ocaml-protoc` and `ppx_deriving_protobuf` perform identically;
+* The IDL based `ocaml-protoc` adds no cost on top of the underlying `ppx_deriving_protobuf`;
 
 * `atd-yojson` is marginally more performant than the other JSON codecs, including bare `Yojson` strangely enough;
 
