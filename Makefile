@@ -10,7 +10,7 @@ DEPS := \
 	protobuf_payload_pb.mli protobuf_payload_pb.ml \
 	protobuf_payload_yojson.mli protobuf_payload_yojson.ml
 
-LIBS := core,core_bench,atdgen,ocaml-protoc,ocaml-protoc-yojson,bin_prot,ppx_bin_prot
+LIBS := core,core_bench,atdgen,ocaml-protoc,ocaml-protoc-yojson,bin_prot,ppx_bin_prot,ppx_deriving_yojson,ppx_deriving_protobuf
 
 help:
 	@echo "Available targets: help, clean, build, build-codecs"

@@ -1,6 +1,8 @@
 open Core
 open Core_bench.Std
 
+(* Raw Yojson *)
+
 let yojson_data =
   Yojson.Basic.(
     `Assoc
@@ -48,9 +50,11 @@ let yojson_data =
       ])
 ;;
 
-let yojson_raw () =
+let yojson_rw () =
   yojson_data |> Yojson.Basic.to_string |> Yojson.Basic.from_string
 ;;
+
+(* ATD *)
 
 let atd_data =
   Atd_payload_t.
@@ -93,6 +97,8 @@ let atd_yojson_rw () =
   |> Atd_payload_j.string_of_atd_payload
   |> Atd_payload_j.atd_payload_of_string
 ;;
+
+(* ocaml-protoc: binary & JSON *)
 
 let protobuf_data =
   Protobuf_payload_types.
@@ -139,30 +145,32 @@ let protobuf_bin_rw () =
   Protobuf_payload_pb.decode_protobuf_payload (Pbrt.Decoder.of_bytes my_binary)
 ;;
 
-let protobuf_json =
+let pbuf_json =
   Yojson.Basic.to_string
     (Protobuf_payload_yojson.encode_protobuf_payload protobuf_data)
 ;;
 
-let protobuf_json_read () =
-  protobuf_json
+let pbuf_json_read () =
+  pbuf_json
   |> Yojson.Basic.from_string
   |> Protobuf_payload_yojson.decode_protobuf_payload
 ;;
 
-let protobuf_json_write () =
+let pbuf_json_write () =
   protobuf_data
   |> Protobuf_payload_yojson.encode_protobuf_payload
   |> Yojson.Basic.to_string
 ;;
 
-let protobuf_json_rw () =
+let pbuf_json_rw () =
   protobuf_data
   |> Protobuf_payload_yojson.encode_protobuf_payload
   |> Yojson.Basic.to_string
   |> Yojson.Basic.from_string
   |> Protobuf_payload_yojson.decode_protobuf_payload
 ;;
+
+(* Bin_prot a.k.a. bin-io *)
 
 module Binprot_tests = struct
   type binprot_payload_fifth =
@@ -256,23 +264,177 @@ let binprot_read () =
     reader pos |> ignore
 ;;
 
+(* ppx_deriving_yojson *)
+
+module Dyo_tests = struct
+  type dyo_payload_fifth =
+    { first : string option
+    ; second : string option
+    ; third : string option
+    ; fourth : string option
+    }
+  [@@deriving yojson { strict = false }]
+
+  type dyo_payload =
+    { first : bool
+    ; second : bool
+    ; third : float
+    ; fourth : int
+    ; fifth : dyo_payload_fifth list
+    ; sixth : int list
+    }
+  [@@deriving yojson { strict = false }]
+end
+
+let dyo_data =
+  Dyo_tests.
+    { first = false
+    ; second = true
+    ; third = 12345678.117
+    ; fourth = 234567
+    ; fifth =
+        [ { first = Some "premier"
+          ; second = Some "deuxieme"
+          ; third = Some ""
+          ; fourth = Some ""
+          }
+        ; { first = Some ""
+          ; second = Some ""
+          ; third = Some "troisieme"
+          ; fourth = Some "quatrieme"
+          }
+        ; { first = Some "premier"
+          ; second = Some "deuxieme"
+          ; third = Some ""
+          ; fourth = Some ""
+          }
+        ; { first = Some ""
+          ; second = Some ""
+          ; third = Some "troisieme"
+          ; fourth = Some "quatrieme"
+          }
+        ]
+    ; sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ]
+    }
+;;
+
+let dyo_jsonbuf =
+  dyo_data |> Dyo_tests.dyo_payload_to_yojson |> Yojson.Safe.to_string
+;;
+
+let dyo_rw () =
+  dyo_data
+  |> Dyo_tests.dyo_payload_to_yojson
+  |> Yojson.Safe.to_string
+  |> Yojson.Safe.from_string
+  |> Dyo_tests.dyo_payload_of_yojson
+;;
+
+let dyo_write () =
+  dyo_data |> Dyo_tests.dyo_payload_to_yojson |> Yojson.Safe.to_string
+;;
+
+let dyo_read () =
+  dyo_jsonbuf |> Yojson.Safe.from_string |> Dyo_tests.dyo_payload_of_yojson
+;;
+
+(* ppx_deriving_protobuf *)
+
+module Dpb_tests = struct
+  type dpb_payload_fifth =
+    { first : string option [@key 1]
+    ; second : string option [@key 2]
+    ; third : string option [@key 3]
+    ; fourth : string option [@key 4]
+    }
+  [@@deriving protobuf]
+
+  type dpb_payload =
+    { first : bool [@key 1]
+    ; second : bool [@key 2]
+    ; third : float [@key 3]
+    ; fourth : int [@key 4]
+    ; fifth : dpb_payload_fifth list [@key 5]
+    ; sixth : int list [@key 6]
+    }
+  [@@deriving protobuf]
+end
+
+let dpb_data =
+  Dpb_tests.
+    { first = false
+    ; second = true
+    ; third = 12345678.117
+    ; fourth = 234567
+    ; fifth =
+        [ { first = Some "premier"
+          ; second = Some "deuxieme"
+          ; third = Some ""
+          ; fourth = Some ""
+          }
+        ; { first = Some ""
+          ; second = Some ""
+          ; third = Some "troisieme"
+          ; fourth = Some "quatrieme"
+          }
+        ; { first = Some "premier"
+          ; second = Some "deuxieme"
+          ; third = Some ""
+          ; fourth = Some ""
+          }
+        ; { first = Some ""
+          ; second = Some ""
+          ; third = Some "troisieme"
+          ; fourth = Some "quatrieme"
+          }
+        ]
+    ; sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ]
+    }
+;;
+
+let dpb_binbuf =
+  dpb_data |> Protobuf.Encoder.encode_exn Dpb_tests.dpb_payload_to_protobuf
+;;
+
+let dpb_rw () =
+  dpb_data
+  |> Protobuf.Encoder.encode_exn Dpb_tests.dpb_payload_to_protobuf
+  |> Protobuf.Decoder.decode_exn Dpb_tests.dpb_payload_from_protobuf
+;;
+
+let dpb_write () =
+  dpb_data |> Protobuf.Encoder.encode_exn Dpb_tests.dpb_payload_to_protobuf
+;;
+
+let dpb_read () =
+  dpb_binbuf |> Protobuf.Decoder.decode_exn Dpb_tests.dpb_payload_from_protobuf
+;;
+
+(* Putting it all together *)
+
 let main () =
   Command.run
     (Bench.make_command
        [ (* spacer *)
-         Bench.Test.create ~name:"binprot: read-write" binprot_rw
-       ; Bench.Test.create ~name:"protobuf-bin: read-write" protobuf_bin_rw
-       ; Bench.Test.create ~name:"protobuf-json: read-write" protobuf_json_rw
-       ; Bench.Test.create ~name:"atd-yojson: read-write" atd_yojson_rw
-       ; Bench.Test.create ~name:"yojson: read-write PARTIAL" yojson_raw
+         Bench.Test.create ~name:"binprot: rw" binprot_rw
+       ; Bench.Test.create ~name:"protobuf-bin: rw" protobuf_bin_rw
+       ; Bench.Test.create ~name:"deriving-protobuf: rw" dpb_rw
+       ; Bench.Test.create ~name:"atd-yojson: rw" atd_yojson_rw
+       ; Bench.Test.create ~name:"deriving-yojson: rw" dyo_rw
+       ; Bench.Test.create ~name:"protobuf-json: rw" pbuf_json_rw
+       ; Bench.Test.create ~name:"yojson-no-marshal: rw" yojson_rw
        ; Bench.Test.create ~name:"binprot: read" binprot_read
        ; Bench.Test.create ~name:"binprot: write" binprot_write
        ; Bench.Test.create ~name:"protobuf-bin: read" protobuf_bin_read
        ; Bench.Test.create ~name:"protobuf-bin: write" protobuf_bin_write
-       ; Bench.Test.create ~name:"protobuf-json: read" protobuf_json_read
-       ; Bench.Test.create ~name:"protobuf-json: write" protobuf_json_write
+       ; Bench.Test.create ~name:"deriving-protobuf: read" dpb_read
+       ; Bench.Test.create ~name:"deriving-protobuf: write" dpb_write
        ; Bench.Test.create ~name:"atd-yojson: read" atd_yojson_read
        ; Bench.Test.create ~name:"atd-yojson: write" atd_yojson_write
+       ; Bench.Test.create ~name:"deriving-yojson: read" dyo_read
+       ; Bench.Test.create ~name:"deriving-yojson: write" dyo_write
+       ; Bench.Test.create ~name:"protobuf-json: read" pbuf_json_read
+       ; Bench.Test.create ~name:"protobuf-json: write" pbuf_json_write
        ])
 ;;
 
