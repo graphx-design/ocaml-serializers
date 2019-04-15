@@ -32,25 +32,25 @@ These ran on my Intel® Core™ i7-8650U CPU @ 1.90GHz:
 ┌──────────────────────────┬─────────────┬───────────┬──────────┬──────────┬────────────┐
 │ Name                     │    Time/Run │   mWd/Run │ mjWd/Run │ Prom/Run │ Percentage │
 ├──────────────────────────┼─────────────┼───────────┼──────────┼──────────┼────────────┤
-│ binprot: rw              │    964.66ns │   399.00w │    0.32w │    0.32w │      5.77% │
-│ protobuf-bin: rw         │  3_474.85ns │ 2_524.04w │  261.37w │    3.37w │     20.77% │
-│ deriving-protobuf: rw    │  3_652.92ns │ 2_623.07w │  261.62w │    3.62w │     21.83% │
-│ atd-yojson: rw           │ 13_700.66ns │ 2_429.01w │  262.07w │    4.07w │     81.88% │
-│ deriving-yojson: rw      │ 16_250.64ns │ 2_501.10w │  276.84w │    3.84w │     97.12% │
-│ protobuf-json: rw        │ 16_732.08ns │ 2_083.08w │  285.34w │    3.34w │    100.00% │
-│ yojson-no-marshal: rw    │ 15_445.61ns │ 1_666.03w │  275.92w │    2.92w │     92.31% │
-│ binprot: read            │    479.05ns │   372.00w │    0.21w │    0.21w │      2.86% │
-│ binprot: write           │    465.85ns │    27.00w │          │          │      2.78% │
-│ protobuf-bin: read       │  1_018.48ns │ 1_214.02w │    1.47w │    1.47w │      6.09% │
-│ protobuf-bin: write      │  2_359.66ns │ 1_310.01w │  258.37w │    0.37w │     14.10% │
-│ deriving-protobuf: read  │  1_050.04ns │ 1_313.03w │    1.84w │    1.84w │      6.28% │
-│ deriving-protobuf: write │  2_205.48ns │ 1_310.02w │  258.61w │    0.61w │     13.18% │
-│ atd-yojson: read         │  7_212.93ns │ 1_977.01w │    4.04w │    4.04w │     43.11% │
-│ atd-yojson: write        │  5_354.93ns │   452.01w │  258.13w │    0.13w │     32.00% │
-│ deriving-yojson: read    │  8_175.88ns │ 1_645.03w │    3.66w │    3.66w │     48.86% │
-│ deriving-yojson: write   │  7_227.02ns │   856.02w │  273.41w │    0.41w │     43.19% │
-│ protobuf-json: read      │  8_397.90ns │ 1_208.02w │    2.78w │    2.78w │     50.19% │
-│ protobuf-json: write     │  7_631.51ns │   875.05w │  282.59w │    0.59w │     45.61% │
+│ binprot: rw              │  1_088.66ns │   409.01w │    0.27w │    0.27w │      6.52% │
+│ protobuf-bin: rw         │  3_399.62ns │ 2_524.04w │  261.38w │    3.38w │     20.38% │
+│ deriving-protobuf: rw    │  3_571.90ns │ 2_623.07w │  261.61w │    3.61w │     21.41% │
+│ atd-yojson: rw           │ 13_329.77ns │ 2_429.01w │  261.99w │    3.99w │     79.89% │
+│ deriving-yojson: rw      │ 16_129.85ns │ 2_501.10w │  276.84w │    3.84w │     96.67% │
+│ protobuf-json: rw        │ 16_684.65ns │ 2_083.08w │  285.34w │    3.34w │    100.00% │
+│ yojson-no-marshal: rw    │ 15_427.45ns │ 1_666.03w │  275.92w │    2.92w │     92.46% │
+│ binprot: read            │    485.12ns │   372.00w │    0.21w │    0.21w │      2.91% │
+│ binprot: write           │    571.75ns │    37.00w │          │          │      3.43% │
+│ protobuf-bin: read       │  1_005.28ns │ 1_214.02w │    1.47w │    1.47w │      6.03% │
+│ protobuf-bin: write      │  2_329.11ns │ 1_310.01w │  258.37w │    0.37w │     13.96% │
+│ deriving-protobuf: read  │  1_038.44ns │ 1_313.03w │    1.84w │    1.84w │      6.22% │
+│ deriving-protobuf: write │  2_200.85ns │ 1_310.02w │  258.61w │    0.61w │     13.19% │
+│ atd-yojson: read         │  7_207.78ns │ 1_977.01w │    4.04w │    4.04w │     43.20% │
+│ atd-yojson: write        │  5_275.34ns │   452.00w │  258.12w │    0.12w │     31.62% │
+│ deriving-yojson: read    │  8_281.38ns │ 1_645.03w │    3.66w │    3.66w │     49.63% │
+│ deriving-yojson: write   │  7_149.42ns │   856.02w │  273.42w │    0.42w │     42.85% │
+│ protobuf-json: read      │  8_486.86ns │ 1_208.02w │    2.79w │    2.79w │     50.87% │
+│ protobuf-json: write     │  7_642.53ns │   875.05w │  282.59w │    0.59w │     45.81% │
 └──────────────────────────┴─────────────┴───────────┴──────────┴──────────┴────────────┘
 ```
 

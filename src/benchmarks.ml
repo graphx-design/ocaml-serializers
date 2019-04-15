@@ -113,11 +113,7 @@ let protobuf_data =
     ; fourth = 234567
     ; fifth =
         [ { first = string_a; second = "deuxieme"; third = ""; fourth = "" }
-        ; { first = ""
-          ; second = ""
-          ; third = string_b
-          ; fourth = "quatrieme"
-          }
+        ; { first = ""; second = ""; third = string_b; fourth = "quatrieme" }
         ; { first = "premier"; second = "deuxieme"; third = ""; fourth = "" }
         ; { first = ""
           ; second = ""
@@ -236,27 +232,36 @@ let binprot_data =
 ;;
 
 let binprot_binbuf =
-  let buf = Bin_prot.Common.create_buf 2048 in
-  let writer = Binprot_tests.bin_write_binprot_payload buf in
+  let open Binprot_tests in
+  let buf =
+    Bin_prot.Common.create_buf (bin_size_binprot_payload binprot_data)
+  in
+  let writer = bin_write_binprot_payload buf in
   let _ = writer ~pos:0 binprot_data in
   buf
 ;;
 
 let binprot_rw () =
+  let open Binprot_tests in
   match Binprot_tests.(String.compare shapedigest fakedigest) = 0 with
   | false -> ()
   | true ->
-    let buf = Bin_prot.Common.create_buf 2048 in
-    let writer = Binprot_tests.bin_write_binprot_payload buf in
+    let buf =
+      Bin_prot.Common.create_buf (bin_size_binprot_payload binprot_data)
+    in
+    let writer = bin_write_binprot_payload buf in
     let _ = writer ~pos:0 binprot_data in
-    let reader = Binprot_tests.bin_read_binprot_payload buf in
+    let reader = bin_read_binprot_payload buf in
     let pos = ref 0 in
     reader pos |> ignore
 ;;
 
 let binprot_write () =
-  let buf = Bin_prot.Common.create_buf 2048 in
-  let writer = Binprot_tests.bin_write_binprot_payload buf in
+  let open Binprot_tests in
+  let buf =
+    Bin_prot.Common.create_buf (bin_size_binprot_payload binprot_data)
+  in
+  let writer = bin_write_binprot_payload buf in
   writer ~pos:0 binprot_data
 ;;
 
