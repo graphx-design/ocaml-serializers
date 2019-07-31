@@ -1,0 +1,23 @@
+# Jane Street is our base profile
+# While "conventional" is perhaps more used, it is further from our ideal.
+profile = janestreet
+
+# Used to be 132, but it tended to be less legible in the end.
+margin = 80
+
+parse-docstrings
+wrap-comments
+break-infix-before-func = false
+indicate-multiline-delimiters = closing-on-separate-line
+if-then-else = fit-or-vertical
+function-indent-nested = auto
+match-indent-nested = auto
+single-case = compact
+type-decl = compact
+ocp-indent-compat = false
+
+# Room for improvement:
+#
+# - Still waiting for break-separators=before-and-docked
+#   ...for BOTH records and lists
+
