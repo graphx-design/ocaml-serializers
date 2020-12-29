@@ -13,6 +13,10 @@ In order to get a rough idea of the cost of serialization and de-serialization i
 * [Cross-platform] `ocaml-protoc`, from a Protobuf IDL (front-end to `ppx_deriving_protobuf`)
 * [OCaml-centric] `ppx_deriving_protobuf`, from type definitions (can _generate_ a Protobuf IDL)
 
+### Cap'n Proto
+
+* [Cross-platform] the IDL and resulting binary data are identical across platforms
+
 ### JSON
 
 * [Cross-platform] Type-safe with `ocaml-protoc-yojson`, from a Protobuf IDL
@@ -29,29 +33,30 @@ My quick hack `thrift_buffer_transport.ml` is still included, in case anyone wit
 These ran on my Intel® Core™ i7-8650U CPU @ 1.90GHz:
 
 ```text
-┌──────────────────────────┬─────────────┬───────────┬──────────┬──────────┬────────────┐
-│ Name                     │    Time/Run │   mWd/Run │ mjWd/Run │ Prom/Run │ Percentage │
-├──────────────────────────┼─────────────┼───────────┼──────────┼──────────┼────────────┤
-│ binprot: rw              │  1_088.66ns │   409.01w │    0.27w │    0.27w │      6.52% │
-│ protobuf-bin: rw         │  3_399.62ns │ 2_524.04w │  261.38w │    3.38w │     20.38% │
-│ deriving-protobuf: rw    │  3_571.90ns │ 2_623.07w │  261.61w │    3.61w │     21.41% │
-│ atd-yojson: rw           │ 13_329.77ns │ 2_429.01w │  261.99w │    3.99w │     79.89% │
-│ deriving-yojson: rw      │ 16_129.85ns │ 2_501.10w │  276.84w │    3.84w │     96.67% │
-│ protobuf-json: rw        │ 16_684.65ns │ 2_083.08w │  285.34w │    3.34w │    100.00% │
-│ yojson-no-marshal: rw    │ 15_427.45ns │ 1_666.03w │  275.92w │    2.92w │     92.46% │
-│ binprot: read            │    485.12ns │   372.00w │    0.21w │    0.21w │      2.91% │
-│ binprot: write           │    571.75ns │    37.00w │          │          │      3.43% │
-│ protobuf-bin: read       │  1_005.28ns │ 1_214.02w │    1.47w │    1.47w │      6.03% │
-│ protobuf-bin: write      │  2_329.11ns │ 1_310.01w │  258.37w │    0.37w │     13.96% │
-│ deriving-protobuf: read  │  1_038.44ns │ 1_313.03w │    1.84w │    1.84w │      6.22% │
-│ deriving-protobuf: write │  2_200.85ns │ 1_310.02w │  258.61w │    0.61w │     13.19% │
-│ atd-yojson: read         │  7_207.78ns │ 1_977.01w │    4.04w │    4.04w │     43.20% │
-│ atd-yojson: write        │  5_275.34ns │   452.00w │  258.12w │    0.12w │     31.62% │
-│ deriving-yojson: read    │  8_281.38ns │ 1_645.03w │    3.66w │    3.66w │     49.63% │
-│ deriving-yojson: write   │  7_149.42ns │   856.02w │  273.42w │    0.42w │     42.85% │
-│ protobuf-json: read      │  8_486.86ns │ 1_208.02w │    2.79w │    2.79w │     50.87% │
-│ protobuf-json: write     │  7_642.53ns │   875.05w │  282.59w │    0.59w │     45.81% │
-└──────────────────────────┴─────────────┴───────────┴──────────┴──────────┴────────────┘
+┌──────────────────────────┬─────────────┬───────────┬───────────┬──────────┬────────────┐
+│ Name                     │    Time/Run │   mWd/Run │  mjWd/Run │ Prom/Run │ Percentage │
+├──────────────────────────┼─────────────┼───────────┼───────────┼──────────┼────────────┤
+│ binprot: rw              │    862.89ns │   384.00w │     0.20w │    0.20w │      5.14% │
+│ protobuf-bin: rw         │  2_868.17ns │ 1_997.03w │   260.17w │    2.17w │     17.10% │
+│ deriving-protobuf: rw    │  3_285.59ns │ 2_513.06w │   262.22w │    4.22w │     19.59% │
+│ atd-yojson: rw           │ 12_771.61ns │ 2_426.00w │   264.73w │    6.73w │     76.14% │
+│ deriving-yojson: rw      │ 15_808.48ns │ 2_243.05w │   277.44w │    4.44w │     94.24% │
+│ protobuf-json: rw        │ 16_774.18ns │ 2_043.08w │   285.30w │    3.30w │    100.00% │
+│ yojson-no-marshal: rw    │ 14_897.95ns │ 1_638.04w │   277.43w │    4.43w │     88.81% │
+│ binprot: read            │    411.00ns │   365.00w │           │          │      2.45% │
+│ binprot: write           │    432.50ns │    19.00w │           │          │      2.58% │
+│ capnp:write              │  3_108.78ns │   793.02w │ 1_026.30w │    0.30w │     18.53% │
+│ protobuf-bin: read       │    777.05ns │   906.02w │     0.59w │    0.59w │      4.63% │
+│ protobuf-bin: write      │  1_834.39ns │ 1_091.01w │   258.57w │    0.57w │     10.94% │
+│ deriving-protobuf: read  │  1_123.37ns │ 1_435.06w │     1.96w │    1.96w │      6.70% │
+│ deriving-protobuf: write │  1_900.74ns │ 1_078.01w │   258.38w │    0.38w │     11.33% │
+│ atd-yojson: read         │  7_199.05ns │ 1_977.01w │     3.72w │    3.72w │     42.92% │
+│ atd-yojson: write        │  5_201.74ns │   449.00w │   258.12w │    0.12w │     31.01% │
+│ deriving-yojson: read    │  8_419.35ns │ 1_424.00w │    -0.47w │   -0.47w │     50.19% │
+│ deriving-yojson: write   │  6_831.80ns │   819.03w │   273.67w │    0.67w │     40.73% │
+│ protobuf-json: read      │  8_850.74ns │ 1_223.02w │     2.46w │    2.46w │     52.76% │
+│ protobuf-json: write     │  7_054.40ns │   820.05w │   282.58w │    0.58w │     42.06% │
+└──────────────────────────┴─────────────┴───────────┴───────────┴──────────┴────────────┘
 ```
 
 From this very simple test, we can derive a few tentative conclusions:
@@ -61,6 +66,8 @@ From this very simple test, we can derive a few tentative conclusions:
 * The IDL based `ocaml-protoc` adds no cost on top of the underlying `ppx_deriving_protobuf`;
 
 * `atd-yojson` is marginally more performant than the other JSON codecs, including bare `Yojson` strangely enough;
+
+* The OCaml native `capnp` implementation underperforms Protobuf;
 
 ## LICENSE AND COPYRIGHT
 

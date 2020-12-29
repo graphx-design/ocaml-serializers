@@ -1,5 +1,5 @@
 open Core
-open Core_bench.Std
+open Core_bench
 
 (* Generic data *)
 
@@ -274,6 +274,48 @@ let binprot_read () =
     reader pos |> ignore
 ;;
 
+(* Cap'n Proto *)
+
+module CPP = Cap_payload.Make [@inlined] (Capnp.BytesMessage)
+
+let capnp_write () =
+  let cpp_root = CPP.Builder.CPayload.init_root () in
+  let cfifths = CPP.Builder.CPayload.fifth_init cpp_root 4 in
+  let csixths = CPP.Builder.CPayload.sixth_init cpp_root 7 in
+  CPP.Builder.CPayload.first_set cpp_root false;
+  CPP.Builder.CPayload.second_set cpp_root true;
+  CPP.Builder.CPayload.third_set cpp_root 12345678.117;
+  CPP.Builder.CPayload.fourth_set cpp_root (Int32.of_int_exn 234567);
+  let cf = Capnp.Array.get cfifths 0 in
+  CPP.Builder.CPayloadFifth.first_set cf string_a;
+  CPP.Builder.CPayloadFifth.second_set cf "deuxieme";
+  CPP.Builder.CPayloadFifth.third_set cf "";
+  CPP.Builder.CPayloadFifth.fourth_set cf "";
+  let cf = Capnp.Array.get cfifths 1 in
+  CPP.Builder.CPayloadFifth.first_set cf "";
+  CPP.Builder.CPayloadFifth.second_set cf "";
+  CPP.Builder.CPayloadFifth.third_set cf string_b;
+  CPP.Builder.CPayloadFifth.fourth_set cf "quatrieme";
+  let cf = Capnp.Array.get cfifths 2 in
+  CPP.Builder.CPayloadFifth.first_set cf "premier";
+  CPP.Builder.CPayloadFifth.second_set cf "deuxieme";
+  CPP.Builder.CPayloadFifth.third_set cf "";
+  CPP.Builder.CPayloadFifth.fourth_set cf "";
+  let cf = Capnp.Array.get cfifths 3 in
+  CPP.Builder.CPayloadFifth.first_set cf "";
+  CPP.Builder.CPayloadFifth.second_set cf "";
+  CPP.Builder.CPayloadFifth.third_set cf "troisieme";
+  CPP.Builder.CPayloadFifth.fourth_set cf "quatrieme";
+  Capnp.Array.set csixths 0 (Int32.of_int_exn 1234);
+  Capnp.Array.set csixths 1 (Int32.of_int_exn 2345);
+  Capnp.Array.set csixths 2 (Int32.of_int_exn 3456);
+  Capnp.Array.set csixths 3 (Int32.of_int_exn 4567);
+  Capnp.Array.set csixths 4 (Int32.of_int_exn 5678);
+  Capnp.Array.set csixths 5 (Int32.of_int_exn 6789);
+  Capnp.Array.set csixths 6 (Int32.of_int_exn 7890);
+  ()
+;;
+
 (* ppx_deriving_yojson *)
 
 module Dyo_tests = struct
@@ -425,26 +467,28 @@ let dpb_read () =
 let main () =
   Command.run
     (Bench.make_command
-       [ (* spacer *)
-         Bench.Test.create ~name:"binprot: rw" binprot_rw
-       ; Bench.Test.create ~name:"protobuf-bin: rw" protobuf_bin_rw
-       ; Bench.Test.create ~name:"deriving-protobuf: rw" dpb_rw
-       ; Bench.Test.create ~name:"atd-yojson: rw" atd_yojson_rw
-       ; Bench.Test.create ~name:"deriving-yojson: rw" dyo_rw
-       ; Bench.Test.create ~name:"protobuf-json: rw" pbuf_json_rw
-       ; Bench.Test.create ~name:"yojson-no-marshal: rw" yojson_rw
-       ; Bench.Test.create ~name:"binprot: read" binprot_read
-       ; Bench.Test.create ~name:"binprot: write" binprot_write
-       ; Bench.Test.create ~name:"protobuf-bin: read" protobuf_bin_read
-       ; Bench.Test.create ~name:"protobuf-bin: write" protobuf_bin_write
-       ; Bench.Test.create ~name:"deriving-protobuf: read" dpb_read
-       ; Bench.Test.create ~name:"deriving-protobuf: write" dpb_write
-       ; Bench.Test.create ~name:"atd-yojson: read" atd_yojson_read
-       ; Bench.Test.create ~name:"atd-yojson: write" atd_yojson_write
-       ; Bench.Test.create ~name:"deriving-yojson: read" dyo_read
-       ; Bench.Test.create ~name:"deriving-yojson: write" dyo_write
-       ; Bench.Test.create ~name:"protobuf-json: read" pbuf_json_read
-       ; Bench.Test.create ~name:"protobuf-json: write" pbuf_json_write
+       [
+         (* spacer *)
+         Bench.Test.create ~name:"binprot: rw" binprot_rw;
+         Bench.Test.create ~name:"protobuf-bin: rw" protobuf_bin_rw;
+         Bench.Test.create ~name:"deriving-protobuf: rw" dpb_rw;
+         Bench.Test.create ~name:"atd-yojson: rw" atd_yojson_rw;
+         Bench.Test.create ~name:"deriving-yojson: rw" dyo_rw;
+         Bench.Test.create ~name:"protobuf-json: rw" pbuf_json_rw;
+         Bench.Test.create ~name:"yojson-no-marshal: rw" yojson_rw;
+         Bench.Test.create ~name:"binprot: read" binprot_read;
+         Bench.Test.create ~name:"binprot: write" binprot_write;
+         Bench.Test.create ~name:"capnp:write" capnp_write;
+         Bench.Test.create ~name:"protobuf-bin: read" protobuf_bin_read;
+         Bench.Test.create ~name:"protobuf-bin: write" protobuf_bin_write;
+         Bench.Test.create ~name:"deriving-protobuf: read" dpb_read;
+         Bench.Test.create ~name:"deriving-protobuf: write" dpb_write;
+         Bench.Test.create ~name:"atd-yojson: read" atd_yojson_read;
+         Bench.Test.create ~name:"atd-yojson: write" atd_yojson_write;
+         Bench.Test.create ~name:"deriving-yojson: read" dyo_read;
+         Bench.Test.create ~name:"deriving-yojson: write" dyo_write;
+         Bench.Test.create ~name:"protobuf-json: read" pbuf_json_read;
+         Bench.Test.create ~name:"protobuf-json: write" pbuf_json_write;
        ])
 ;;
 
