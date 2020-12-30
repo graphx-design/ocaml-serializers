@@ -33,30 +33,30 @@ My quick hack `thrift_buffer_transport.ml` is still included, in case anyone wit
 These ran on my Intel® Core™ i7-8650U CPU @ 1.90GHz:
 
 ```text
-┌──────────────────────────┬─────────────┬───────────┬───────────┬──────────┬────────────┐
-│ Name                     │    Time/Run │   mWd/Run │  mjWd/Run │ Prom/Run │ Percentage │
-├──────────────────────────┼─────────────┼───────────┼───────────┼──────────┼────────────┤
-│ binprot: rw              │    862.89ns │   384.00w │     0.20w │    0.20w │      5.14% │
-│ protobuf-bin: rw         │  2_868.17ns │ 1_997.03w │   260.17w │    2.17w │     17.10% │
-│ deriving-protobuf: rw    │  3_285.59ns │ 2_513.06w │   262.22w │    4.22w │     19.59% │
-│ atd-yojson: rw           │ 12_771.61ns │ 2_426.00w │   264.73w │    6.73w │     76.14% │
-│ deriving-yojson: rw      │ 15_808.48ns │ 2_243.05w │   277.44w │    4.44w │     94.24% │
-│ protobuf-json: rw        │ 16_774.18ns │ 2_043.08w │   285.30w │    3.30w │    100.00% │
-│ yojson-no-marshal: rw    │ 14_897.95ns │ 1_638.04w │   277.43w │    4.43w │     88.81% │
-│ binprot: read            │    411.00ns │   365.00w │           │          │      2.45% │
-│ binprot: write           │    432.50ns │    19.00w │           │          │      2.58% │
-│ capnp:write              │  3_108.78ns │   793.02w │ 1_026.30w │    0.30w │     18.53% │
-│ protobuf-bin: read       │    777.05ns │   906.02w │     0.59w │    0.59w │      4.63% │
-│ protobuf-bin: write      │  1_834.39ns │ 1_091.01w │   258.57w │    0.57w │     10.94% │
-│ deriving-protobuf: read  │  1_123.37ns │ 1_435.06w │     1.96w │    1.96w │      6.70% │
-│ deriving-protobuf: write │  1_900.74ns │ 1_078.01w │   258.38w │    0.38w │     11.33% │
-│ atd-yojson: read         │  7_199.05ns │ 1_977.01w │     3.72w │    3.72w │     42.92% │
-│ atd-yojson: write        │  5_201.74ns │   449.00w │   258.12w │    0.12w │     31.01% │
-│ deriving-yojson: read    │  8_419.35ns │ 1_424.00w │    -0.47w │   -0.47w │     50.19% │
-│ deriving-yojson: write   │  6_831.80ns │   819.03w │   273.67w │    0.67w │     40.73% │
-│ protobuf-json: read      │  8_850.74ns │ 1_223.02w │     2.46w │    2.46w │     52.76% │
-│ protobuf-json: write     │  7_054.40ns │   820.05w │   282.58w │    0.58w │     42.06% │
-└──────────────────────────┴─────────────┴───────────┴───────────┴──────────┴────────────┘
+┌──────────────────────────┬─────────────┬───────────┬──────────┬──────────┬────────────┐
+│ Name                     │    Time/Run │   mWd/Run │ mjWd/Run │ Prom/Run │ Percentage │
+├──────────────────────────┼─────────────┼───────────┼──────────┼──────────┼────────────┤
+│ binprot: rw              │    856.28ns │   384.00w │    0.20w │    0.20w │      5.14% │
+│ protobuf-bin: rw         │  2_792.29ns │ 1_997.03w │  260.14w │    2.14w │     16.76% │
+│ deriving-protobuf: rw    │  3_128.10ns │ 2_513.06w │  262.24w │    4.24w │     18.77% │
+│ atd-yojson: rw           │ 12_852.26ns │ 2_426.01w │  264.51w │    6.51w │     77.14% │
+│ deriving-yojson: rw      │ 15_596.39ns │ 2_243.06w │  277.33w │    4.33w │     93.61% │
+│ protobuf-json: rw        │ 16_661.85ns │ 2_043.07w │  285.06w │    3.06w │    100.00% │
+│ yojson-no-marshal: rw    │ 14_826.40ns │ 1_638.04w │  277.43w │    4.43w │     88.98% │
+│ binprot: read            │    404.71ns │   365.00w │          │          │      2.43% │
+│ binprot: write           │    435.65ns │    19.00w │          │          │      2.61% │
+│ capnp:write              │  1_894.60ns │   793.05w │  258.43w │    0.43w │     11.37% │
+│ protobuf-bin: read       │    769.56ns │   906.02w │    0.58w │    0.58w │      4.62% │
+│ protobuf-bin: write      │  1_854.72ns │ 1_091.01w │  258.57w │    0.57w │     11.13% │
+│ deriving-protobuf: read  │  1_111.62ns │ 1_435.06w │    1.96w │    1.96w │      6.67% │
+│ deriving-protobuf: write │  1_835.38ns │ 1_078.01w │  258.35w │    0.35w │     11.02% │
+│ atd-yojson: read         │  7_147.99ns │ 1_977.01w │    3.72w │    3.72w │     42.90% │
+│ atd-yojson: write        │  5_232.28ns │   449.00w │  258.10w │          │     31.40% │
+│ deriving-yojson: read    │  8_653.08ns │ 1_424.00w │   -0.46w │   -0.46w │     51.93% │
+│ deriving-yojson: write   │  6_855.80ns │   819.03w │  273.69w │    0.69w │     41.15% │
+│ protobuf-json: read      │  8_869.98ns │ 1_223.02w │    2.56w │    2.56w │     53.24% │
+│ protobuf-json: write     │  7_086.42ns │   820.08w │  282.58w │    0.58w │     42.53% │
+└──────────────────────────┴─────────────┴───────────┴──────────┴──────────┴────────────┘
 ```
 
 From this very simple test, we can derive a few tentative conclusions:
@@ -67,7 +67,7 @@ From this very simple test, we can derive a few tentative conclusions:
 
 * `atd-yojson` is marginally more performant than the other JSON codecs, including bare `Yojson` strangely enough;
 
-* The OCaml native `capnp` implementation underperforms Protobuf;
+* The OCaml native `capnp` implementation seems to perform on par with Protobuf, from a preliminary write-only experiment;
 
 ## LICENSE AND COPYRIGHT
 

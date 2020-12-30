@@ -279,7 +279,7 @@ let binprot_read () =
 module CPP = Cap_payload.Make [@inlined] (Capnp.BytesMessage)
 
 let capnp_write () =
-  let cpp_root = CPP.Builder.CPayload.init_root () in
+  let cpp_root = CPP.Builder.CPayload.init_root ~message_size:2048 () in
   let cfifths = CPP.Builder.CPayload.fifth_init cpp_root 4 in
   let csixths = CPP.Builder.CPayload.sixth_init cpp_root 7 in
   CPP.Builder.CPayload.first_set cpp_root false;
