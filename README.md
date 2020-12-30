@@ -36,26 +36,28 @@ These ran on my Intel® Core™ i7-8650U CPU @ 1.90GHz:
 ┌──────────────────────────┬─────────────┬───────────┬──────────┬──────────┬────────────┐
 │ Name                     │    Time/Run │   mWd/Run │ mjWd/Run │ Prom/Run │ Percentage │
 ├──────────────────────────┼─────────────┼───────────┼──────────┼──────────┼────────────┤
-│ binprot: rw              │    856.28ns │   384.00w │    0.20w │    0.20w │      5.14% │
-│ protobuf-bin: rw         │  2_792.29ns │ 1_997.03w │  260.14w │    2.14w │     16.76% │
-│ deriving-protobuf: rw    │  3_128.10ns │ 2_513.06w │  262.24w │    4.24w │     18.77% │
-│ atd-yojson: rw           │ 12_852.26ns │ 2_426.01w │  264.51w │    6.51w │     77.14% │
-│ deriving-yojson: rw      │ 15_596.39ns │ 2_243.06w │  277.33w │    4.33w │     93.61% │
-│ protobuf-json: rw        │ 16_661.85ns │ 2_043.07w │  285.06w │    3.06w │    100.00% │
-│ yojson-no-marshal: rw    │ 14_826.40ns │ 1_638.04w │  277.43w │    4.43w │     88.98% │
-│ binprot: read            │    404.71ns │   365.00w │          │          │      2.43% │
-│ binprot: write           │    435.65ns │    19.00w │          │          │      2.61% │
-│ capnp:write              │  1_894.60ns │   793.05w │  258.43w │    0.43w │     11.37% │
-│ protobuf-bin: read       │    769.56ns │   906.02w │    0.58w │    0.58w │      4.62% │
-│ protobuf-bin: write      │  1_854.72ns │ 1_091.01w │  258.57w │    0.57w │     11.13% │
-│ deriving-protobuf: read  │  1_111.62ns │ 1_435.06w │    1.96w │    1.96w │      6.67% │
-│ deriving-protobuf: write │  1_835.38ns │ 1_078.01w │  258.35w │    0.35w │     11.02% │
-│ atd-yojson: read         │  7_147.99ns │ 1_977.01w │    3.72w │    3.72w │     42.90% │
-│ atd-yojson: write        │  5_232.28ns │   449.00w │  258.10w │          │     31.40% │
-│ deriving-yojson: read    │  8_653.08ns │ 1_424.00w │   -0.46w │   -0.46w │     51.93% │
-│ deriving-yojson: write   │  6_855.80ns │   819.03w │  273.69w │    0.69w │     41.15% │
-│ protobuf-json: read      │  8_869.98ns │ 1_223.02w │    2.56w │    2.56w │     53.24% │
-│ protobuf-json: write     │  7_086.42ns │   820.08w │  282.58w │    0.58w │     42.53% │
+│ binprot: rw              │    873.90ns │   384.00w │    0.20w │    0.20w │      4.96% │
+│ capnp: rw                │  3_005.08ns │ 1_781.09w │  259.28w │    1.28w │     17.05% │
+│ protobuf-bin: rw         │  2_713.29ns │ 1_997.04w │  260.28w │    2.28w │     15.39% │
+│ deriving-protobuf: rw    │  3_244.36ns │ 2_513.06w │  262.26w │    4.26w │     18.40% │
+│ atd-yojson: rw           │ 12_909.65ns │ 2_426.00w │  264.74w │    6.74w │     73.23% │
+│ deriving-yojson: rw      │ 17_629.74ns │ 2_243.08w │  276.06w │    3.06w │    100.00% │
+│ protobuf-json: rw        │ 17_138.44ns │ 2_043.10w │  285.62w │    3.62w │     97.21% │
+│ yojson-no-marshal: rw    │ 15_267.60ns │ 1_638.04w │  276.74w │    3.74w │     86.60% │
+│ binprot: read            │    419.65ns │   365.00w │          │          │      2.38% │
+│ binprot: write           │    441.96ns │    19.00w │          │          │      2.51% │
+│ capnp: read              │    847.07ns │   953.02w │    0.32w │    0.32w │      4.80% │
+│ capnp: write             │  2_020.26ns │   793.04w │  258.46w │    0.46w │     11.46% │
+│ protobuf-bin: read       │    773.75ns │   906.02w │    0.59w │    0.59w │      4.39% │
+│ protobuf-bin: write      │  1_870.20ns │ 1_091.01w │  258.57w │    0.57w │     10.61% │
+│ deriving-protobuf: read  │  1_108.85ns │ 1_435.06w │    1.96w │    1.96w │      6.29% │
+│ deriving-protobuf: write │  1_961.03ns │ 1_078.01w │  258.37w │    0.37w │     11.12% │
+│ atd-yojson: read         │  7_251.69ns │ 1_977.01w │    3.77w │    3.77w │     41.13% │
+│ atd-yojson: write        │  4_831.84ns │   449.00w │  258.12w │    0.12w │     27.41% │
+│ deriving-yojson: read    │  8_586.96ns │ 1_424.00w │   -0.45w │   -0.45w │     48.71% │
+│ deriving-yojson: write   │  6_627.43ns │   819.03w │  273.77w │    0.77w │     37.59% │
+│ protobuf-json: read      │  9_003.48ns │ 1_223.02w │    2.65w │    2.65w │     51.07% │
+│ protobuf-json: write     │  7_240.96ns │   820.04w │  282.69w │    0.69w │     41.07% │
 └──────────────────────────┴─────────────┴───────────┴──────────┴──────────┴────────────┘
 ```
 
@@ -67,7 +69,7 @@ From this very simple test, we can derive a few tentative conclusions:
 
 * `atd-yojson` is marginally more performant than the other JSON codecs, including bare `Yojson` strangely enough;
 
-* The OCaml native `capnp` implementation seems to perform on par with Protobuf, from a preliminary write-only experiment;
+* The OCaml native `capnp` implementation performs exactly on par with Protobuf binary, since there needs to be conversion to native OCaml types;
 
 ## LICENSE AND COPYRIGHT
 

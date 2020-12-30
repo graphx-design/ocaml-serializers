@@ -278,7 +278,25 @@ let binprot_read () =
 
 module CPP = Cap_payload.Make [@inlined] (Capnp.BytesMessage)
 
-let capnp_write () =
+module Capnp_test = struct
+  type cpayload_fifth = {
+    first : string option;
+    second : string option;
+    third : string option;
+    fourth : string option;
+  }
+
+  type cpayload = {
+    first : bool;
+    second : bool;
+    third : float;
+    fourth : int;
+    fifth : cpayload_fifth list;
+    sixth : int list;
+  }
+end
+
+let capnp_create () =
   let cpp_root = CPP.Builder.CPayload.init_root ~message_size:2048 () in
   let cfifths = CPP.Builder.CPayload.fifth_init cpp_root 4 in
   let csixths = CPP.Builder.CPayload.sixth_init cpp_root 7 in
@@ -313,7 +331,40 @@ let capnp_write () =
   Capnp.Array.set csixths 4 (Int32.of_int_exn 5678);
   Capnp.Array.set csixths 5 (Int32.of_int_exn 6789);
   Capnp.Array.set csixths 6 (Int32.of_int_exn 7890);
-  ()
+  cpp_root
+;;
+
+let capnp_root = capnp_create ()
+let capnp_write () = capnp_create () |> CPP.Builder.CPayload.to_message
+
+let capnp_decode root =
+  let open CPP.Builder in
+  let cpfifth_of_cpnp cpnp =
+    Capnp_test.
+      {
+        first = Some (CPayloadFifth.first_get cpnp);
+        second = Some (CPayloadFifth.second_get cpnp);
+        third = Some (CPayloadFifth.third_get cpnp);
+        fourth = Some (CPayloadFifth.fourth_get cpnp);
+      }
+  in
+  Capnp_test.
+    {
+      first = CPayload.first_get root;
+      second = CPayload.second_get root;
+      third = CPayload.third_get root;
+      fourth = CPayload.fourth_get root |> Int32.to_int_exn;
+      fifth = CPayload.fifth_get_list root |> List.map ~f:cpfifth_of_cpnp;
+      sixth = CPayload.sixth_get_list root |> List.map ~f:Int32.to_int_exn;
+    }
+;;
+
+let capnp_read () = capnp_decode capnp_root
+
+let capnp_rw () =
+  let msg = capnp_write () in
+  let root = CPP.Builder.CPayload.of_message msg in
+  capnp_decode root
 ;;
 
 (* ppx_deriving_yojson *)
@@ -470,6 +521,7 @@ let main () =
        [
          (* spacer *)
          Bench.Test.create ~name:"binprot: rw" binprot_rw;
+         Bench.Test.create ~name:"capnp: rw" capnp_rw;
          Bench.Test.create ~name:"protobuf-bin: rw" protobuf_bin_rw;
          Bench.Test.create ~name:"deriving-protobuf: rw" dpb_rw;
          Bench.Test.create ~name:"atd-yojson: rw" atd_yojson_rw;
@@ -478,7 +530,8 @@ let main () =
          Bench.Test.create ~name:"yojson-no-marshal: rw" yojson_rw;
          Bench.Test.create ~name:"binprot: read" binprot_read;
          Bench.Test.create ~name:"binprot: write" binprot_write;
-         Bench.Test.create ~name:"capnp:write" capnp_write;
+         Bench.Test.create ~name:"capnp: read" capnp_read;
+         Bench.Test.create ~name:"capnp: write" capnp_write;
          Bench.Test.create ~name:"protobuf-bin: read" protobuf_bin_read;
          Bench.Test.create ~name:"protobuf-bin: write" protobuf_bin_write;
          Bench.Test.create ~name:"deriving-protobuf: read" dpb_read;
