@@ -11,47 +11,54 @@ let string_b = String.make 500 'B'
 let yojson_data =
   Yojson.Basic.(
     `Assoc
-      [ "first", `Bool false
-      ; "second", `Bool true
-      ; "third", `Float 12345678.117
-      ; "fourth", `Int 234567
-      ; ( "fifth"
-        , `List
-            [ `Assoc
-                [ "first", `String string_a
-                ; "second", `String "deuxieme"
-                ; "third", `String ""
-                ; "fourth", `String ""
-                ]
-            ; `Assoc
-                [ "first", `String ""
-                ; "second", `String ""
-                ; "third", `String string_b
-                ; "fourth", `String "quatrieme"
-                ]
-            ; `Assoc
-                [ "first", `String "premier"
-                ; "second", `String "deuxieme"
-                ; "third", `String ""
-                ; "fourth", `String ""
-                ]
-            ; `Assoc
-                [ "first", `String ""
-                ; "second", `String ""
-                ; "third", `String "troisieme"
-                ; "fourth", `String "quatrieme"
-                ]
-            ] )
-      ; ( "sixth"
-        , `List
-            [ `Int 1234
-            ; `Int 2345
-            ; `Int 3456
-            ; `Int 4567
-            ; `Int 5678
-            ; `Int 6789
-            ; `Int 7890
-            ] )
+      [
+        "first", `Bool false;
+        "second", `Bool true;
+        "third", `Float 12345678.117;
+        "fourth", `Int 234567;
+        ( "fifth",
+          `List
+            [
+              `Assoc
+                [
+                  "first", `String string_a;
+                  "second", `String "deuxieme";
+                  "third", `String "";
+                  "fourth", `String "";
+                ];
+              `Assoc
+                [
+                  "first", `String "";
+                  "second", `String "";
+                  "third", `String string_b;
+                  "fourth", `String "quatrieme";
+                ];
+              `Assoc
+                [
+                  "first", `String "premier";
+                  "second", `String "deuxieme";
+                  "third", `String "";
+                  "fourth", `String "";
+                ];
+              `Assoc
+                [
+                  "first", `String "";
+                  "second", `String "";
+                  "third", `String "troisieme";
+                  "fourth", `String "quatrieme";
+                ];
+            ] );
+        ( "sixth",
+          `List
+            [
+              `Int 1234;
+              `Int 2345;
+              `Int 3456;
+              `Int 4567;
+              `Int 5678;
+              `Int 6789;
+              `Int 7890;
+            ] );
       ])
 ;;
 
@@ -63,33 +70,39 @@ let yojson_rw () =
 
 let atd_data =
   Atd_payload_t.
-    { first = false
-    ; second = true
-    ; third = 12345678.117
-    ; fourth = 234567
-    ; fifth =
-        [ { first = Some string_a
-          ; second = Some "deuxieme"
-          ; third = None
-          ; fourth = None
-          }
-        ; { first = None
-          ; second = None
-          ; third = Some string_b
-          ; fourth = Some "quatrieme"
-          }
-        ; { first = Some "premier"
-          ; second = Some "deuxieme"
-          ; third = None
-          ; fourth = None
-          }
-        ; { first = None
-          ; second = None
-          ; third = Some "troisieme"
-          ; fourth = Some "quatrieme"
-          }
-        ]
-    ; sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ]
+    {
+      first = false;
+      second = true;
+      third = 12345678.117;
+      fourth = 234567;
+      fifth =
+        [
+          {
+            first = Some string_a;
+            second = Some "deuxieme";
+            third = None;
+            fourth = None;
+          };
+          {
+            first = None;
+            second = None;
+            third = Some string_b;
+            fourth = Some "quatrieme";
+          };
+          {
+            first = Some "premier";
+            second = Some "deuxieme";
+            third = None;
+            fourth = None;
+          };
+          {
+            first = None;
+            second = None;
+            third = Some "troisieme";
+            fourth = Some "quatrieme";
+          };
+        ];
+      sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ];
     }
 ;;
 
@@ -107,21 +120,19 @@ let atd_yojson_rw () =
 
 let protobuf_data =
   Protobuf_payload_types.
-    { first = false
-    ; second = true
-    ; third = 12345678.117
-    ; fourth = 234567
-    ; fifth =
-        [ { first = string_a; second = "deuxieme"; third = ""; fourth = "" }
-        ; { first = ""; second = ""; third = string_b; fourth = "quatrieme" }
-        ; { first = "premier"; second = "deuxieme"; third = ""; fourth = "" }
-        ; { first = ""
-          ; second = ""
-          ; third = "troisieme"
-          ; fourth = "quatrieme"
-          }
-        ]
-    ; sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ]
+    {
+      first = false;
+      second = true;
+      third = 12345678.117;
+      fourth = 234567;
+      fifth =
+        [
+          { first = string_a; second = "deuxieme"; third = ""; fourth = "" };
+          { first = ""; second = ""; third = string_b; fourth = "quatrieme" };
+          { first = "premier"; second = "deuxieme"; third = ""; fourth = "" };
+          { first = ""; second = ""; third = "troisieme"; fourth = "quatrieme" };
+        ];
+      sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ];
     }
 ;;
 
@@ -174,22 +185,22 @@ let pbuf_json_rw () =
 (* Bin_prot a.k.a. bin-io *)
 
 module Binprot_tests = struct
-  type binprot_payload_fifth =
-    { first : string option
-    ; second : string option
-    ; third : string option
-    ; fourth : string option
-    }
+  type binprot_payload_fifth = {
+    first : string option;
+    second : string option;
+    third : string option;
+    fourth : string option;
+  }
   [@@deriving bin_io]
 
-  type binprot_payload =
-    { first : bool
-    ; second : bool
-    ; third : float
-    ; fourth : int
-    ; fifth : binprot_payload_fifth list
-    ; sixth : int list
-    }
+  type binprot_payload = {
+    first : bool;
+    second : bool;
+    third : float;
+    fourth : int;
+    fifth : binprot_payload_fifth list;
+    sixth : int list;
+  }
   [@@deriving bin_io]
 
   let shapedigest =
@@ -201,33 +212,39 @@ end
 
 let binprot_data =
   Binprot_tests.
-    { first = false
-    ; second = true
-    ; third = 12345678.117
-    ; fourth = 234567
-    ; fifth =
-        [ { first = Some string_a
-          ; second = Some "deuxieme"
-          ; third = Some ""
-          ; fourth = Some ""
-          }
-        ; { first = Some ""
-          ; second = Some ""
-          ; third = Some string_b
-          ; fourth = Some "quatrieme"
-          }
-        ; { first = Some "premier"
-          ; second = Some "deuxieme"
-          ; third = Some ""
-          ; fourth = Some ""
-          }
-        ; { first = Some ""
-          ; second = Some ""
-          ; third = Some "troisieme"
-          ; fourth = Some "quatrieme"
-          }
-        ]
-    ; sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ]
+    {
+      first = false;
+      second = true;
+      third = 12345678.117;
+      fourth = 234567;
+      fifth =
+        [
+          {
+            first = Some string_a;
+            second = Some "deuxieme";
+            third = Some "";
+            fourth = Some "";
+          };
+          {
+            first = Some "";
+            second = Some "";
+            third = Some string_b;
+            fourth = Some "quatrieme";
+          };
+          {
+            first = Some "premier";
+            second = Some "deuxieme";
+            third = Some "";
+            fourth = Some "";
+          };
+          {
+            first = Some "";
+            second = Some "";
+            third = Some "troisieme";
+            fourth = Some "quatrieme";
+          };
+        ];
+      sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ];
     }
 ;;
 
@@ -370,54 +387,60 @@ let capnp_rw () =
 (* ppx_deriving_yojson *)
 
 module Dyo_tests = struct
-  type dyo_payload_fifth =
-    { first : string option
-    ; second : string option
-    ; third : string option
-    ; fourth : string option
-    }
+  type dyo_payload_fifth = {
+    first : string option;
+    second : string option;
+    third : string option;
+    fourth : string option;
+  }
   [@@deriving yojson { strict = false }]
 
-  type dyo_payload =
-    { first : bool
-    ; second : bool
-    ; third : float
-    ; fourth : int
-    ; fifth : dyo_payload_fifth list
-    ; sixth : int list
-    }
+  type dyo_payload = {
+    first : bool;
+    second : bool;
+    third : float;
+    fourth : int;
+    fifth : dyo_payload_fifth list;
+    sixth : int list;
+  }
   [@@deriving yojson { strict = false }]
 end
 
 let dyo_data =
   Dyo_tests.
-    { first = false
-    ; second = true
-    ; third = 12345678.117
-    ; fourth = 234567
-    ; fifth =
-        [ { first = Some string_a
-          ; second = Some "deuxieme"
-          ; third = Some ""
-          ; fourth = Some ""
-          }
-        ; { first = Some ""
-          ; second = Some ""
-          ; third = Some string_b
-          ; fourth = Some "quatrieme"
-          }
-        ; { first = Some "premier"
-          ; second = Some "deuxieme"
-          ; third = Some ""
-          ; fourth = Some ""
-          }
-        ; { first = Some ""
-          ; second = Some ""
-          ; third = Some "troisieme"
-          ; fourth = Some "quatrieme"
-          }
-        ]
-    ; sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ]
+    {
+      first = false;
+      second = true;
+      third = 12345678.117;
+      fourth = 234567;
+      fifth =
+        [
+          {
+            first = Some string_a;
+            second = Some "deuxieme";
+            third = Some "";
+            fourth = Some "";
+          };
+          {
+            first = Some "";
+            second = Some "";
+            third = Some string_b;
+            fourth = Some "quatrieme";
+          };
+          {
+            first = Some "premier";
+            second = Some "deuxieme";
+            third = Some "";
+            fourth = Some "";
+          };
+          {
+            first = Some "";
+            second = Some "";
+            third = Some "troisieme";
+            fourth = Some "quatrieme";
+          };
+        ];
+      sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ];
     }
 ;;
 
@@ -444,54 +467,60 @@ let dyo_read () =
 (* ppx_deriving_protobuf *)
 
 module Dpb_tests = struct
-  type dpb_payload_fifth =
-    { first : string option [@key 1]
-    ; second : string option [@key 2]
-    ; third : string option [@key 3]
-    ; fourth : string option [@key 4]
-    }
+  type dpb_payload_fifth = {
+    first : string option; [@key 1]
+    second : string option; [@key 2]
+    third : string option; [@key 3]
+    fourth : string option; [@key 4]
+  }
   [@@deriving protobuf]
 
-  type dpb_payload =
-    { first : bool [@key 1]
-    ; second : bool [@key 2]
-    ; third : float [@key 3]
-    ; fourth : int [@key 4]
-    ; fifth : dpb_payload_fifth list [@key 5]
-    ; sixth : int list [@key 6]
-    }
+  type dpb_payload = {
+    first : bool; [@key 1]
+    second : bool; [@key 2]
+    third : float; [@key 3]
+    fourth : int; [@key 4]
+    fifth : dpb_payload_fifth list; [@key 5]
+    sixth : int list; [@key 6]
+  }
   [@@deriving protobuf]
 end
 
 let dpb_data =
   Dpb_tests.
-    { first = false
-    ; second = true
-    ; third = 12345678.117
-    ; fourth = 234567
-    ; fifth =
-        [ { first = Some string_a
-          ; second = Some "deuxieme"
-          ; third = Some ""
-          ; fourth = Some ""
-          }
-        ; { first = Some ""
-          ; second = Some ""
-          ; third = Some string_b
-          ; fourth = Some "quatrieme"
-          }
-        ; { first = Some "premier"
-          ; second = Some "deuxieme"
-          ; third = Some ""
-          ; fourth = Some ""
-          }
-        ; { first = Some ""
-          ; second = Some ""
-          ; third = Some "troisieme"
-          ; fourth = Some "quatrieme"
-          }
-        ]
-    ; sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ]
+    {
+      first = false;
+      second = true;
+      third = 12345678.117;
+      fourth = 234567;
+      fifth =
+        [
+          {
+            first = Some string_a;
+            second = Some "deuxieme";
+            third = Some "";
+            fourth = Some "";
+          };
+          {
+            first = Some "";
+            second = Some "";
+            third = Some string_b;
+            fourth = Some "quatrieme";
+          };
+          {
+            first = Some "premier";
+            second = Some "deuxieme";
+            third = Some "";
+            fourth = Some "";
+          };
+          {
+            first = Some "";
+            second = Some "";
+            third = Some "troisieme";
+            fourth = Some "quatrieme";
+          };
+        ];
+      sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ];
     }
 ;;
 
