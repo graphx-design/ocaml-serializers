@@ -182,6 +182,60 @@ let pbuf_json_rw () =
   |> Protobuf_payload_yojson.decode_protobuf_payload
 ;;
 
+(* Ocaml protobuf plugin *)
+
+let protoplug_data =
+  Protoplugin_payload.Protoplugin_payloads.ProtoplugPayload.
+    {
+      first = false;
+      second = true;
+      third = 12345678.117;
+      fourth = 234567;
+      fifth =
+        [
+          { first = string_a; second = "deuxieme"; third = ""; fourth = "" };
+          { first = ""; second = ""; third = string_b; fourth = "quatrieme" };
+          { first = "premier"; second = "deuxieme"; third = ""; fourth = "" };
+          { first = ""; second = ""; third = "troisieme"; fourth = "quatrieme" };
+        ];
+      sixth = [ 1234; 2345; 3456; 4567; 5678; 6789; 7890 ];
+    }
+;;
+
+let protoplug_bin =
+  protoplug_data
+  |> Protoplugin_payload.Protoplugin_payloads.ProtoplugPayload.to_proto
+  |> Ocaml_protoc_plugin.Writer.contents
+;;
+
+let protoplug_write () =
+  protoplug_data
+  |> Protoplugin_payload.Protoplugin_payloads.ProtoplugPayload.to_proto
+  |> Ocaml_protoc_plugin.Writer.contents
+  |> ignore
+;;
+
+let protoplug_read () =
+  protoplug_bin
+  |> Ocaml_protoc_plugin.Reader.create
+  |> Protoplugin_payload.Protoplugin_payloads.ProtoplugPayload.from_proto
+  |> ignore
+;;
+
+let protoplug_rw () =
+  match
+    protoplug_bin
+    |> Ocaml_protoc_plugin.Reader.create
+    |> Protoplugin_payload.Protoplugin_payloads.ProtoplugPayload.from_proto
+  with
+  | Ok str ->
+    str
+    |> Protoplugin_payload.Protoplugin_payloads.ProtoplugPayload.to_proto
+    |> Ocaml_protoc_plugin.Writer.contents
+    |> ignore
+  | _ -> ()
+;;
+
 (* Bin_prot a.k.a. bin-io *)
 
 module Binprot_tests = struct
@@ -552,6 +606,7 @@ let main () =
          Bench.Test.create ~name:"binprot: rw" binprot_rw;
          Bench.Test.create ~name:"capnp: rw" capnp_rw;
          Bench.Test.create ~name:"protobuf-bin: rw" protobuf_bin_rw;
+         Bench.Test.create ~name:"protoplug: rw" protoplug_rw;
          Bench.Test.create ~name:"deriving-protobuf: rw" dpb_rw;
          Bench.Test.create ~name:"atd-yojson: rw" atd_yojson_rw;
          Bench.Test.create ~name:"deriving-yojson: rw" dyo_rw;
@@ -563,6 +618,8 @@ let main () =
          Bench.Test.create ~name:"capnp: write" capnp_write;
          Bench.Test.create ~name:"protobuf-bin: read" protobuf_bin_read;
          Bench.Test.create ~name:"protobuf-bin: write" protobuf_bin_write;
+         Bench.Test.create ~name:"protoplug: read" protoplug_read;
+         Bench.Test.create ~name:"protoplug: write" protoplug_write;
          Bench.Test.create ~name:"deriving-protobuf: read" dpb_read;
          Bench.Test.create ~name:"deriving-protobuf: write" dpb_write;
          Bench.Test.create ~name:"atd-yojson: read" atd_yojson_read;

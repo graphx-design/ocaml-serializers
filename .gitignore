@@ -9,9 +9,12 @@
 *.cmxa
 *.exe
 
+tags
+
 src/atd_*.ml*
 src/cap_payload.ml*
 src/protobuf_*.ml*
+src/protoplug*.ml*
 
 # ocamlbuild working directory
 _build/

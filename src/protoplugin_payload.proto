@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package protoplugin_payloads;
+
+message ProtoplugPayloadFifth {
+	string first = 1;
+	string second = 2;
+	string third = 3;
+	string fourth = 4;
+}
+
+message ProtoplugPayload {
+	bool first = 1;
+	bool second = 2;
+	double third = 3;
+	int32 fourth = 4;
+	repeated ProtoplugPayloadFifth fifth = 5;
+	repeated int32 sixth = 6;
+}
