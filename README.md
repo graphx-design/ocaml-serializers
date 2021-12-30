@@ -80,7 +80,7 @@ From this very simple test, we can derive a few tentative conclusions:
 
 The contents of this repository is:
 
-Copyright (c) 2019 Graph X Design Inc. <https://www.gxd.ca/>
+Copyright (c) 2019-2021 Graph X Design Inc. <https://www.gxd.ca/>
 
 Distributed under the MIT (X11) License:
 http://www.opensource.org/licenses/mit-license.php
